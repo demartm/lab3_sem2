@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-bool invert_vec(unsigned char* vec, size_t len){
+void inversion(unsigned char *vec, size_t len){
 if(vec){
 
 size_t tail_len = 8 - (len % 8);
@@ -22,11 +22,9 @@ ones = ones >> tail_len;
 
     vec[len/8] &= ones;
   }
-    return true;
 
 }
 
-return false;
 }
 
 int main()
