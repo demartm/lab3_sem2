@@ -63,8 +63,10 @@ if(str && cells){
     }
 return vec;
 }
+}
+}
 
-bool invert_vec(unsigned char* vec, size_t len){
+void inversion(unsigned char *vec, size_t len){//bool invert_vec(unsigned char* vec, size_t len){
 if(vec){
 
 size_t tail_len = 8 - (len % 8);
@@ -83,11 +85,9 @@ ones = ones >> tail_len;
 
     vec[len/8] &= ones;
   }
-    return true;
 
 }
 
-return false;
 }
 
 void set1(unsigned char *vec, size_t bits, size_t bit){
@@ -277,6 +277,9 @@ if(vec && bits && k){
 
 int main()
 {
-    printf("Hello World!\n");
+int cells = 0;
+unsigned char *bv = convertStrToLongBv("100001",&cells);
+printBV(bv,6);
+// printf("Hello World!\n");
     return 0;
 }
