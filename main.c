@@ -33,37 +33,35 @@ if(vec && bits){
 
 }
 
-unsigned char *convertStrToLongBv(char *str, int *cells) {
-
+unsigned char *convertStrToLongBv(char *str, int *cells){
 if(str && cells){
 
-  int len = 0;
-  int i = 0;
-  int ix = 0;
-
-  len = strlen(str);
+  size_t len = strlen(str);
   *cells = ((len - 1) / 8) + 1;
 
-  unsigned char *vec = (unsigned char*)calloc((*cells), sizeof(unsigned char));
+  size_t ix = 0;
 
-  for(int i = 0; i < (*cells); i++){
-    unsigned char mask = 1;
-    for(int j = 0; (j < 8) && (ix < len); j++){
+  unsigned char *vec = (unsigned char*)calloc(len, sizeof(unsigned char));
 
-      if(str[ix] != '0'){
+  if(vec){
+    for(size_t i = 0; i < (*cells); i++){
 
-        vec[i] |= mask;
+      unsigned char mask = 1;
+
+      for(size_t j = 0; (j < 8) && (ix < len); j++){
+
+        if(str[ix] != '0'){
+
+          vec[i] = vec[i] | mask;
+        }
+
+        ix++;
+        mask = mask << 1;
       }
 
-    mask = mask << 1;
-    ix++;
+
     }
-  }
-  return vec;
-
-}
-
-return NULL;
+return vec;
 }
 
 int main()
