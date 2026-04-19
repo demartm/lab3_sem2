@@ -3,28 +3,36 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-bool set_bit(unsigned char *vec, bool bit, size_t k){
-if(vec){
+void set1(unsigned char *vec, size_t bits, size_t bit){
 
-  int byte = k / 8;
-  int bit = k % 8;
+if(vec && bits && bit && (bits >= bit)){
+
+  int byte = bit / 8;
+  int k = bit % 8;
   unsigned char mask = 1;
-  // if(!bit){
-  //   mask = 0;
-  // }
 
-  mask = mask << bit;
-  if(bit){
-  vec[byte] |= mask;
+  mask = mask << k;
 
-  } else {
-  vec[byte] &= ~mask;
-  }
-
-  return true;
+  vec[byte] = vec[byte] | mask;
 
 }
-return false;
+
+}
+
+void set0(unsigned char *vec, size_t bits, size_t bit){
+
+if(vec && bits && bit && (bits >= bit)){
+
+  int byte = bit / 8;
+  int k = bit % 8;
+  unsigned char mask = 1;
+
+  mask = mask << k;
+
+  vec[byte] = vec[byte] & (~mask);
+
+}
+
 }
 
 int main()
