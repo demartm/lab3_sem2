@@ -2,6 +2,60 @@
 #include <string.h>
 #include <stdlib.h>
 
+/*Реализовать все предложенные операции для булева вектора произвольной длины.
+
+Способ представление булева вектора в памяти обсуждалось на занятии. Уметь его рассказать.
+
+Продемонстрировать работу всех операций.
+
+Во многих функциях представлены следующие входные аргументы.
+
+ usigned char *vecA – указатель на массив;
+
+ size_t bits – длина булева вектора(количество разрядов);
+
+Во многих функциях передается именно длина вектора, а не количество ячеек. Количество ячеек, для организации цикла,
+
+можно определять непосредственно в функции по известной вам формуле.
+
+bytes  =  ((bits- 1) / 8) + 1;//вычисление количества ячеек булева вектора(количества байт необходимы для хранения булева вектора длины bits)
+
+ 1. Логическое умножение;
+
+unsigned char * logMul(unsigned char *vecA, size_t bitsA, unsigned char *vecB, size_t bitsB);
+
+2. Логическое сложение;
+
+unsigned char * logSum(unsigned char *vecA, size_t bitsA, unsigned char *vecB, size_t bitsB);
+
+3. Сумма по модулю 2;
+
+unsigned char * sumMod2(unsignedchar *vecA, size_t bitsA, unsigned char *vecB, size_t bitsB);
+
+ 4. Инверсия;
+
+void inversion(unsigned char *vec, size_t bits);
+
+5. Сдвиг влево на K разрядов;
+
+void shiftLeft(unsigned char *vec, size_t bits, size_t k);
+
+6. Сдвиг вправо на K разрядов;
+
+void shiftRight(unsigned char *vec, size_t bits, size_t k);
+
+ 7. Установка/сброс К-ого разряда;
+
+void set1(unsigned char *vec, size_t bits, size_t bit);
+
+void set0(unsigned char *vec, size_t bits, size_t bit);
+
+8. Функция конвертации строки в булев вектор;
+
+9. Функция конвертации булева вектора в строку;
+
+10.Функция печати булева вектора на консоль;*/
+
 void printBV(unsigned char *vec, size_t bits){
 if(vec && bits){
 
@@ -131,7 +185,7 @@ ones = ones >> tail_len;
 
 void set1(unsigned char *vec, size_t bits, size_t bit){
 
-if(vec && bits && bit && (bits >= bit)){
+if(vec && bits && (bits >= bit)){
 
   int byte = bit / 8;
   int k = bit % 8;
@@ -146,7 +200,7 @@ if(vec && bits && bit && (bits >= bit)){
 }
 
 void set0(unsigned char *vec, size_t bits, size_t bit){
-if(vec && bits && bit && (bits >= bit)){
+if(vec && bits && (bits >= bit)){
 
   int byte = bit / 8;
   int k = bit % 8;
@@ -159,9 +213,6 @@ if(vec && bits && bit && (bits >= bit)){
 }
 
 }
-
-
-
 
 unsigned char *logMul(unsigned char *vecA, unsigned char *vecB, size_t bitsA, size_t bitsB){
 
@@ -231,6 +282,8 @@ void shiftRight(unsigned char *vec, size_t bits, size_t k){
 if(vec && bits && k){
 
   size_t bytes = ((bits - 1) / 8) + 1;
+  size_t byte_k = k / 8;
+  k = k % 8;
 
   size_t tail_len = 8 - (bits % 8);
   unsigned char ones = 0;
@@ -239,15 +292,32 @@ if(vec && bits && k){
 
   for(size_t i = (bytes - 1); i > 0; i--){
     unsigned char mask = 0;
+  size_t addr = i - byte_k;
 
-    vec[i] = vec[i] << k;
+  if(addr < bytes){
 
-    mask = vec[i - 1];
+    vec[i] = vec[addr] << k;
+  } else {
+
+  vec[i] = 0;
+  }
+    //vec[i] = vec[i] << k;
+
+  if(k){
+    mask = vec[addr - 1];
     mask = mask >> (8 - k);
     vec[i] = vec[i] | mask;
   }
 
-  vec[0] = vec[0] << k;
+  }
+
+  if(byte_k == 0){
+
+    vec[0] = vec[0] << k;
+  } else {
+
+    vec[0]=0;
+  }
  if(bits % 8){
   vec[bytes - 1] = vec[bytes - 1] & ones;
 }
@@ -260,26 +330,49 @@ void shiftLeft(unsigned char *vec, size_t bits, size_t k){
 if(vec && bits && k){
 
   size_t bytes = ((bits - 1) / 8) + 1;
+  size_t byte_k = k / 8;
+  k = k % 8;
 
   // size_t tail_len = 8 - (bits % 8);
   // unsigned char ones = 0;
   // ones = ~ones;
-  // ones = ones << tail_len;
+  // ones = ones >> tail_len;
 
   for(size_t i = 0; i < (bytes - 1); i++){
     unsigned char mask = 0;
+  size_t addr = i + byte_k;
 
-    vec[i] = vec[i] >> k;
+  if(addr < bytes){
 
-    mask = vec[i + 1];
+    vec[i] = vec[addr] >> k;
+    //vec[i] = vec[i] << k;
+
+  if(k && (addr + 1) < bytes){
+    mask = vec[addr + 1];
     mask = mask << (8 - k);
     vec[i] = vec[i] | mask;
   }
 
-  vec[bytes - 1] = vec[bytes - 1] >> k;
+  } else {
+
+  vec[i] = 0;
+  }
+  }
+
+  if(byte_k == 0){
+
+    vec[bytes - 1] = vec[bytes - 1] >> k;
+  } else {
+
+    vec[bytes - 1]=0;
+  }
+//  if(bits % 8){
+//   vec[bytes - 1] = vec[bytes - 1] & ones;
+// }
 }
 
 }
+
 
 int main()
 {
@@ -538,9 +631,30 @@ vec4 = NULL;
 
 
 printf("\n\n-----------------------------------\nShift right:\n\n");
-unsigned char test5[] = "100011101011001";
-size_t bits5 = 15;
-size_t k = 2;
+// unsigned char test5[] = "1111111111111111";
+// size_t bits5 = 16;
+// size_t k = 9;
+/*111111111111111100000
+000000000111111100000
+Shift back:
+111111100000000000000*/
+
+unsigned char test5[] = "0011100001101110000110111000001000111011010011101101001110111";
+size_t bits5 = 61;
+size_t k = 20;
+/*001110000110111000011011100000100011101101001110110100111011100000
+000000000000000000000011100001101110000110111000001000111011000000
+Shift back:
+001110000110111000011011100000100011101100000000000000000000000000*/
+
+// unsigned char test5[] = "0011100001101110000110111000001000111011010011101101001110111";
+// size_t bits5 = 61;
+// size_t k = 0;
+/*001110000110111000011011100000100011101101001110110100111011100000
+001110000110111000011011100000100011101101001110110100111011100000
+Shift back:
+001110000110111000011011100000100011101101001110110100111011100000*/
+
 unsigned char *vec5 = convertStrToLongBv(test5,&cells);
 if(!vec5){
   printf("error converting");
@@ -550,15 +664,101 @@ if(!vec5){
 printBV(vec5,bits5+5);
 printf("\n");
 
-shiftRight(vec5,bits,k);
+shiftRight(vec5,bits5,k);
 
 printBV(vec5,bits5+5);
 
 printf("\nShift back:\n");
 
 
-shiftLeft(vec5,bits,k);
+shiftLeft(vec5,bits5,k);
 printBV(vec5,bits5+5);
+free(vec5);
+vec5 = NULL;
+printf("\n\n-----------------------------------\nShift left:\n\n");
+
+// unsigned char test6[] = "100";
+// size_t bits6 = 3;
+// size_t k2 = 3;
+/*10000000
+00000000
+Shift back:
+00000000*/
+
+unsigned char test6[] = "0011100001101110000110111000001000111011010011101101001110111";
+size_t bits6 = 61;
+size_t k2 = 30;
+/*001110000110111000011011100000100011101101001110110100111011100000
+100011101101001110110100111011100000000000000000000000000000000000
+Shift back:
+000000000000000000000000000000100011101101001110110100111011100000*/
+
+// unsigned char test6[] = "1111111111111111";
+// size_t bits6 = 16;
+// size_t k2 = 9;
+/*111111111111111100000
+111111100000000000000
+Shift back:
+000000000111111100000*/
+unsigned char *vec6 = convertStrToLongBv(test6,&cells);
+if(!vec6){
+  printf("error converting");
+  return 0;
+}
+
+printBV(vec6,bits6+5);
+printf("\n");
+
+shiftLeft(vec6,bits6,k2);
+
+printBV(vec6,bits6+5);
+
+printf("\nShift back:\n");
+
+
+shiftRight(vec6,bits6,k2);
+printBV(vec6,bits6+5);
+free(vec6);
+vec6 = NULL;
+
+
+printf("\n\n-----------------------------------\nSet1 / set0:\n\n");
+
+// unsigned char test7[] = "0011100001101110000110111000001000111011010011101101001110111";
+// size_t bits7 = 61;
+// size_t k3 = 0;
+/*0011100001101110000110111000001000111011010011101101001110111
+1011100001101110000110111000001000111011010011101101001110111
+1011100001101110000110111000001000111011010011101101001110111*/
+
+// unsigned char test7[] = "10011101";
+// size_t bits7 = 8;
+// size_t k3 = 2;
+/*10011101
+10111101
+10101101*/
+
+unsigned char test7[] = "11111111";
+size_t bits7 = 8;
+size_t k3 = 2;
+
+/*11111111
+11111111
+11101111*/
+
+unsigned char *vec7 = convertStrToLongBv(test7,&cells);
+if(!vec7){
+  printf("error converting");
+  return 0;
+}
+printBV(vec7,bits7);
+printf("\n");
+set1(vec7,bits7,k3);
+printBV(vec7,bits7);
+printf("\n");
+set0(vec7,bits7,k3+1);
+printBV(vec7,bits7);;
+
 
 return 0;
 }
