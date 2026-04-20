@@ -297,17 +297,19 @@ if(vec && bits && k){
   if(addr < bytes){
 
     vec[i] = vec[addr] << k;
+
+    if(k){
+    mask = vec[addr - 1];
+    mask = mask >> (8 - k);
+    vec[i] = vec[i] | mask;
+  }
   } else {
 
   vec[i] = 0;
   }
     //vec[i] = vec[i] << k;
 
-  if(k){
-    mask = vec[addr - 1];
-    mask = mask >> (8 - k);
-    vec[i] = vec[i] | mask;
-  }
+
 
   }
 
