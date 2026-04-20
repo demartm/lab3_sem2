@@ -162,10 +162,7 @@ return NULL;
 void inversion(unsigned char *vec, size_t len){//bool invert_vec(unsigned char* vec, size_t len){
 if(vec && len){
 
-size_t tail_len = 8 - (len % 8);
-unsigned char ones = 0;
-ones = ~ones;
-ones = ones >> tail_len;
+
 
   unsigned char mask = 0;//255;
   mask = ~mask;
@@ -175,6 +172,10 @@ ones = ones >> tail_len;
     vec[i] ^= mask;
   }
   if((len % 8) != 0){
+  size_t tail_len = 8 - (len % 8);
+  unsigned char ones = 0;
+  ones = ~ones;
+  ones = ones >> tail_len;
 
     vec[len/8] &= ones;
   }
@@ -285,10 +286,6 @@ if(vec && bits && k){
   size_t byte_k = k / 8;
   k = k % 8;
 
-  size_t tail_len = 8 - (bits % 8);
-  unsigned char ones = 0;
-  ones = ~ones;
-  ones = ones >> tail_len;
 
   for(size_t i = (bytes - 1); i > 0; i--){
     unsigned char mask = 0;
@@ -320,7 +317,12 @@ if(vec && bits && k){
 
     vec[0]=0;
   }
- if(bits % 8){
+ if(k){//bits % 8){
+  size_t tail_len = 8 - k;//(bits % 8);
+  unsigned char ones = 0;
+  ones = ~ones;
+  ones = ones >> tail_len;
+
   vec[bytes - 1] = vec[bytes - 1] & ones;
 }
 }
