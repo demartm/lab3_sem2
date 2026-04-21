@@ -771,24 +771,34 @@ vec7 = NULL;
  unsigned char *vec8 = (unsigned char*)calloc(13,sizeof(unsigned char));
 inversion(vec8,100);
 
-// printBV(vec8,100);
-// printf("\n");
+printf("\n\n\n\n");
+printBV(vec8,100);
+printf("\n");
 
 
 // while(vec8[12]){
 // shiftRight(vec8,100,1);
-//  printBV(vec8,100);
+// printBV(vec8,100);
 // //printf("\n%p",vec8);
 
 // printf("\n1234567890qwertyuiop\n");
 // }
 
 
-//  for(int i = 0; i < 100; i++){
-// // shiftRight(vec8,100,1);
-//  printBV(vec8,10);
-//  printf("\n%d\n\n\n",i);
-//  }
+ for(int i = 0; i < 100; i++){
+shiftRight(vec8,100,1);
+ printBV(vec8,100);
+ printf("\n",i);
+ }
+
+printf("\n\n\n\n");
+inversion(vec8,100);
+ for(int i = 0; i < 100; i++){
+shiftLeft(vec8,100,1);
+ printBV(vec8,100);
+ printf("\n",i);
+ }
+
  free(vec8);
 // vec8 = NULL;
 
