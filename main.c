@@ -286,7 +286,6 @@ if(vec && bits && k){
   size_t byte_k = k / 8;
   k = k % 8;
 
-
   for(size_t i = (bytes - 1); i > 0; i--){
     unsigned char mask = 0;
   size_t addr = i - byte_k;
@@ -295,7 +294,7 @@ if(vec && bits && k){
 
     vec[i] = vec[addr] << k;
 
-    if(k){
+    if(k && addr > 0){
     mask = vec[addr - 1];
     mask = mask >> (8 - k);
     vec[i] = vec[i] | mask;
@@ -318,7 +317,7 @@ if(vec && bits && k){
     vec[0]=0;
   }
  if(k){//bits % 8){
-  size_t tail_len = 8 - k;//(bits % 8);
+  size_t tail_len = (bits % 8);
   unsigned char ones = 0;
   ones = ~ones;
   ones = ones >> tail_len;
@@ -762,6 +761,26 @@ printBV(vec7,bits7);
 printf("\n");
 set0(vec7,bits7,k3+1);
 printBV(vec7,bits7);;
+
+free(vec7);
+vec7 = NULL;
+
+
+// printf("\n\n-----------------------------------\nFinal test:\n\n");
+
+// unsigned char *vec8 = (unsigned char*)calloc(100,sizeof(unsigned char));
+// inversion(vec8,100);
+
+// printBV(vec8,100);
+// printf("\n");
+
+// for(int i = 0; i < 100; i++){
+// shiftRight(vec8,100,1);
+// printBV(vec8,100);
+// printf("\n%d\n\n\n",i);
+// }
+// free(vec8);
+// vec8 = NULL;
 
 
 return 0;
