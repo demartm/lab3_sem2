@@ -288,8 +288,8 @@ if(vec && bits && k){
 
   for(size_t i = (bytes - 1); i > 0; i--){
     unsigned char mask = 0;
-  size_t addr = i - byte_k;
 
+  size_t addr = i - byte_k;
   if(addr < bytes){
 
     vec[i] = vec[addr] << k;
@@ -317,7 +317,7 @@ if(vec && bits && k){
     vec[0]=0;
   }
  if(k){//bits % 8){
-  size_t tail_len = (bits % 8);
+  size_t tail_len = 8 - (bits % 8);
   unsigned char ones = 0;
   ones = ~ones;
   ones = ones >> tail_len;
@@ -336,10 +336,7 @@ if(vec && bits && k){
   size_t byte_k = k / 8;
   k = k % 8;
 
-  // size_t tail_len = 8 - (bits % 8);
-  // unsigned char ones = 0;
-  // ones = ~ones;
-  // ones = ones >> tail_len;
+
 
   for(size_t i = 0; i < (bytes - 1); i++){
     unsigned char mask = 0;
@@ -369,9 +366,14 @@ if(vec && bits && k){
 
     vec[bytes - 1]=0;
   }
-//  if(bits % 8){
-//   vec[bytes - 1] = vec[bytes - 1] & ones;
-// }
+  if(bits % 8){
+
+  size_t tail_len = 8 - (bits % 8);
+  unsigned char ones = 0;
+  ones = ~ones;
+  ones = ones >> tail_len;
+   vec[bytes - 1] = vec[bytes - 1] & ones;
+ }
 }
 
 }
@@ -709,18 +711,18 @@ if(!vec6){
   return 0;
 }
 
-printBV(vec6,bits6+5);
+printBV(vec6,bits6);
 printf("\n");
 
-shiftLeft(vec6,bits6,k2);
+shiftLeft(vec6,bits6,5);
 
-printBV(vec6,bits6+5);
+printBV(vec6,bits6);
 
 printf("\nShift back:\n");
 
 
-shiftRight(vec6,bits6,k2);
-printBV(vec6,bits6+5);
+shiftRight(vec6,bits6,5);
+printBV(vec6,bits6);
 free(vec6);
 vec6 = NULL;
 
@@ -793,6 +795,10 @@ shiftRight(vec8,100,1);
 
 printf("\n\n\n\n");
 inversion(vec8,100);
+// shiftRight(vec8,100,101);
+// printBV(vec8,100);
+
+// return 0;
  for(int i = 0; i < 100; i++){
 shiftLeft(vec8,100,1);
  printBV(vec8,100);
